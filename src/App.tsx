@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import type { Mode } from './types';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -6,13 +6,8 @@ import DataTable from '../components/data-table/DataTable';
 import Form from 'react-bootstrap/Form';
 
 function App() {
-  const [theme, setTheme] = useState('dark');
   const [inputText, setInputText] = useState('');
   const [mode, setMode] = useState<Mode>('include');
-
-  useEffect(() => {
-    document.body.setAttribute('data-bs-theme', theme);
-  }, [theme]);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setInputText(e.target.value);
