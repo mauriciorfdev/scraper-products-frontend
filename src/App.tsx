@@ -3,40 +3,19 @@ import type { Mode } from './types';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import DataTable from '../components/data-table/DataTable';
-import Form from 'react-bootstrap/Form';
+import IngredientFilterBar from '../components/ingredient-filter-bar/IngredientFilterBar';
 
 function App() {
   const [inputText, setInputText] = useState('');
   const [mode, setMode] = useState<Mode>('include');
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setInputText(e.target.value);
-  }
-
   return (
     <>
-      <Form>
-        <Form.Group className='mb-3' controlId='exampleSearch'>
-          <Form.Control
-            type='text'
-            placeholder='Type the ingredient...'
-            onChange={handleChange}
-          />
-          <Form.Check // prettier-ignore
-            type='switch'
-            id='custom-switch'
-            label='Include Ingredients'
-            inline
-            checked={mode == 'include' ? true : false}
-            onChange={() => {
-              let toggle = document.getElementById(
-                'custom-switch',
-              ) as HTMLInputElement;
-              toggle.checked ? setMode('include') : setMode('exclude');
-            }}
-          />
-        </Form.Group>
-      </Form>
+      <IngredientFilterBar
+        setInputText={setInputText}
+        mode={mode}
+        setMode={setMode}
+      ></IngredientFilterBar>
 
       <br />
 
