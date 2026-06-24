@@ -4,9 +4,15 @@ import Table from 'react-bootstrap/Table';
 import Badge from 'react-bootstrap/Badge';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import type { Mode } from '../../src/types.ts';
+import type { FilterMode } from '../../src/types.ts';
 
-const DataTable = ({ input, mode }: { input: string; mode: Mode }) => {
+const DataTable = ({
+  input,
+  filterMode,
+}: {
+  input: string;
+  filterMode: FilterMode;
+}) => {
   const [show, setShow] = useState(false);
   const [dataModal, setDataModal] = useState('');
   const handleClose = () => setShow(false);
@@ -41,7 +47,7 @@ const DataTable = ({ input, mode }: { input: string; mode: Mode }) => {
     //depending on the toggle button is checked, return products that include ingredient, or the rest of them otherwise
     return input === ''
       ? true
-      : mode === 'include'
+      : filterMode === 'include'
         ? includeIngredient
         : !includeIngredient;
   });

@@ -1,14 +1,18 @@
 import type { SetStateAction } from 'react';
 import Form from 'react-bootstrap/Form';
-import type { Mode } from '../../src/types';
+import type { FilterMode } from '../../src/types';
 
 type FilterProps = {
   setInputText: React.Dispatch<SetStateAction<string>>;
-  mode: Mode;
-  setMode: React.Dispatch<SetStateAction<Mode>>;
+  filterMode: FilterMode;
+  setFilterMode: React.Dispatch<SetStateAction<FilterMode>>;
 };
 
-const IngredientFilterBar = ({ setInputText, mode, setMode }: FilterProps) => {
+const IngredientFilterBar = ({
+  setInputText,
+  filterMode,
+  setFilterMode,
+}: FilterProps) => {
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setInputText(e.target.value);
   }
@@ -25,12 +29,9 @@ const IngredientFilterBar = ({ setInputText, mode, setMode }: FilterProps) => {
           id='custom-switch'
           label='Include Ingredients'
           inline
-          checked={mode == 'include' ? true : false}
-          onChange={() => {
-            let toggle = document.getElementById(
-              'custom-switch',
-            ) as HTMLInputElement;
-            toggle.checked ? setMode('include') : setMode('exclude');
+          checked={filterMode === 'include'}
+          onChange={(e) => {
+            setFilterMode(e.target.checked ? 'include' : 'exclude');
           }}
         />
       </Form.Group>
