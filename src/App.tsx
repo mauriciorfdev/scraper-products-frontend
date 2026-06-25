@@ -1,25 +1,26 @@
 import { useState } from 'react';
-import type { FilterMode } from './types';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import DataTable from '../components/data-table/DataTable';
 import IngredientFilterBar from '../components/ingredient-filter-bar/IngredientFilterBar';
+import type { IngredientFilters } from './types';
 
 function App() {
-  const [inputText, setInputText] = useState('');
-  const [filterMode, setFilterMode] = useState<FilterMode>('include');
+  const [filters, setFilters] = useState<IngredientFilters>({
+    search: '',
+    filterMode: 'include',
+  });
 
   return (
     <>
       <IngredientFilterBar
-        setInputText={setInputText}
-        filterMode={filterMode}
-        setFilterMode={setFilterMode}
+        filters={filters}
+        setFilters={setFilters}
       ></IngredientFilterBar>
 
       <br />
 
-      <DataTable input={inputText} filterMode={filterMode} />
+      <DataTable filters={filters} />
     </>
   );
 }
