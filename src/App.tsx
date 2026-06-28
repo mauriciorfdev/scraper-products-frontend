@@ -11,7 +11,7 @@ function App() {
     <>
       <Routes>
         <Route element={<PrivateRoutes />}>
-          <Route path='/products' element={<ProductsPage />}></Route>
+          <Route path='/' element={<ProductsPage />}></Route>
         </Route>
         <Route path='/login' element={<LoginPage />}></Route>
         <Route path='*' element={<NotFoundPage />}></Route>

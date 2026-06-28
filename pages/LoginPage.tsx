@@ -1,21 +1,37 @@
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { useState } from 'react';
+import { useAuth } from '../context/AuthProvider';
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [isRegistering, setIsRegistering] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState('');
 
+  const userExample = { email: 'usr@gmail.com', password: 'usrpass' }; //para testear
+
+  const { loginAuth } = useAuth();
+  const navigate = useNavigate();
+
   function handleChange(e: React.ChangeEvent<any>) {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    console.log(formData);
+  }
+
+  async function handleSubmit(e: React.ChangeEvent<any>) {
+    e.preventDefault();
+    try {
+      await loginAuth(userExample); // testear con userExample, luego formData
+      navigate('/', { replace: true });
+    } catch (error) {
+      console.error('Error en el formulario de login:', error);
+    }
   }
 
   return (
     <div style={{ border: '1px solid darkRed', marginBottom: '50px' }}>
-      <Form>
+      <Form onSubmit={handleSubmit}>
         <Form.Group className='mb-3' controlId='formEmail'>
           <Form.Label>Email address</Form.Label>
           <Form.Control
@@ -56,7 +72,7 @@ const LoginPage = () => {
 
         <div>
           <Button variant='primary' type='submit'>
-            {isRegistering ? 'Sign Up' : 'Login'}
+            {isRegistering ? 'Sign Up' : 'Login with user example'}
           </Button>
 
           <Button
