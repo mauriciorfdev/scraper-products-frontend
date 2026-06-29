@@ -1,9 +1,5 @@
 const API_URL = import.meta.env.VITE_API_URL;
-
-interface LoginData {
-  email: string;
-  password: string;
-}
+import type { LoginData } from '../src/types';
 
 const loginService = async (credentials: LoginData) => {
   const response = await fetch(`${API_URL}/auth/login`, {

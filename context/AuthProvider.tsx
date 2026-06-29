@@ -1,23 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import { getMe, loginService } from '../services/authService';
-
-interface User {
-  email: string;
-  password: string;
-}
-
-interface AuthContextType {
-  user: User | null;
-  loading: boolean;
-  checkAuth: () => void;
-  loginAuth: (credentials: LoginData) => Promise<void>;
-}
-
-interface LoginData {
-  email: string;
-  password: string;
-}
+import type { LoginData, AuthContextType, User } from '../src/types';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -33,6 +17,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     setLoading(true);
     try {
       const user = await getMe();
+      console.log(user);
       setUser(user);
     } catch (error) {
       console.log(error);
