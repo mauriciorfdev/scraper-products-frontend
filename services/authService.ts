@@ -32,4 +32,21 @@ const getMe = async () => {
   return data;
 };
 
-export { loginService, getMe };
+const logoutService = async () => {
+  const response = await fetch(`${API_URL}/auth/logout`, {
+    method: 'POST',
+    credentials: 'include', //indica a la peticion incluir credenciales del servidor
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  const data = await response.json();
+  console.log(data);
+
+  if (!response.ok) {
+    throw new Error(data.msg); //msje backend
+  }
+  return data;
+};
+
+export { loginService, getMe, logoutService };

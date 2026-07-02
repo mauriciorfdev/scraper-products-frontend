@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
-import { getMe, loginService } from '../services/authService';
+import { getMe, loginService, logoutService } from '../services/authService';
 import type { LoginData, AuthContextType, User } from '../src/types';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -32,8 +32,13 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     await checkAuth();
   };
 
+  const logoutAuth = async () => {
+    await logoutService();
+    setUser(null);
+  };
+
   return (
-    <AuthContext value={{ user, checkAuth, loading, loginAuth }}>
+    <AuthContext value={{ user, checkAuth, loading, loginAuth, logoutAuth }}>
       {children}
     </AuthContext>
   );

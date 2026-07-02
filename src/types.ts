@@ -17,6 +17,7 @@ export interface AuthContextType {
   loading: boolean;
   checkAuth: () => Promise<void>;
   loginAuth: (credentials: LoginData) => Promise<void>;
+  logoutAuth: () => Promise<void>;
 }
 
 export interface User {
