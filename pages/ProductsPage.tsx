@@ -3,6 +3,7 @@ import DataTable from '../components/data-table/DataTable';
 import IngredientFilterBar from '../components/ingredient-filter-bar/IngredientFilterBar';
 import type { IngredientFilters } from '../src/types';
 import Header from '../components/header/Header';
+import styles from './ProductsPage.module.css';
 
 const ProductsPage = () => {
   const [filters, setFilters] = useState<IngredientFilters>({
@@ -13,12 +14,14 @@ const ProductsPage = () => {
     <>
       <Header />
 
-      <IngredientFilterBar
-        filters={filters}
-        setFilters={setFilters}
-      ></IngredientFilterBar>
+      <div className={styles.container}>
+        <IngredientFilterBar
+          filters={filters}
+          setFilters={setFilters}
+        ></IngredientFilterBar>
 
-      <DataTable filters={filters} />
+        <DataTable filters={filters} />
+      </div>
     </>
   );
 };

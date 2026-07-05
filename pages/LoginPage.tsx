@@ -30,7 +30,7 @@ const LoginPage = () => {
   }
 
   return (
-    <div style={{ border: '1px solid darkRed', marginBottom: '50px' }}>
+    <div className='d-flex justify-content-center align-items-center vh-100'>
       <Form onSubmit={handleSubmit}>
         <Form.Group className='mb-3' controlId='formEmail'>
           <Form.Label>Email address</Form.Label>

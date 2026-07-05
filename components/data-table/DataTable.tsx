@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import './dataTable.css';
 import Table from 'react-bootstrap/Table';
 import Badge from 'react-bootstrap/Badge';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import type { IngredientFilters } from '../../src/types.ts';
+import styles from './DataTable.module.css';
 
 interface DataTableProps {
   filters: IngredientFilters;
@@ -79,7 +79,7 @@ const DataTable = ({ filters }: DataTableProps) => {
   }
 
   return (
-    <div style={{ width: '700px' }}>
+    <div className={styles.container}>
       <h1>Products ({filteredData.length})</h1>
 
       {filteredData.length == 0 ? (
