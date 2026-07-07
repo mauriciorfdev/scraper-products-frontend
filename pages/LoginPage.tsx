@@ -5,13 +5,14 @@ import { useAuth } from '../context/AuthProvider';
 import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
-  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    name: '',
+  });
   const [isRegistering, setIsRegistering] = useState(false);
-  const [confirmPassword, setConfirmPassword] = useState('');
 
-  const userExample = { email: 'usr@gmail.com', password: 'usrpass' }; //para testear
-
-  const { loginAuth } = useAuth();
+  const { loginAuth, registerAuth } = useAuth();
   const navigate = useNavigate();
 
   function handleChange(e: React.ChangeEvent<any>) {
@@ -21,8 +22,12 @@ const LoginPage = () => {
 
   async function handleSubmit(e: React.ChangeEvent<any>) {
     e.preventDefault();
+    const { name, email, password } = formData;
     try {
-      await loginAuth(userExample); // testear con userExample, luego formData
+      if (isRegistering) {
+        await registerAuth({ name, email, password });
+      }
+      await loginAuth({ email, password });
       navigate('/', { replace: true });
     } catch (error) {
       console.error('Error en el formulario de login:', error);
@@ -30,62 +35,64 @@ const LoginPage = () => {
   }
 
   return (
-    <div className='d-flex justify-content-center align-items-center vh-100'>
-      <Form onSubmit={handleSubmit}>
-        <Form.Group className='mb-3' controlId='formEmail'>
-          <Form.Label>Email address</Form.Label>
-          <Form.Control
-            type='email'
-            name='email'
-            placeholder='Enter email'
-            onChange={(e) => {
-              handleChange(e);
-            }}
-          />
-        </Form.Group>
+    <>
+      <div className='d-flex justify-content-center align-items-center vh-100'>
+        <Form onSubmit={handleSubmit}>
+          {isRegistering && (
+            <Form.Group className='mb-3' controlId='formName'>
+              <Form.Label>Name</Form.Label>
+              <Form.Control
+                type='text'
+                name='name'
+                placeholder='Name'
+                onChange={(e) => {
+                  handleChange(e);
+                }}
+              />
+            </Form.Group>
+          )}
 
-        <Form.Group className='mb-3' controlId='formPassword'>
-          <Form.Label>Password</Form.Label>
-          <Form.Control
-            type='password'
-            name='password'
-            placeholder='Password'
-            onChange={(e) => {
-              handleChange(e);
-            }}
-          />
-        </Form.Group>
-
-        {isRegistering && (
-          <Form.Group className='mb-3' controlId='formPassword'>
-            <Form.Label>Confirm Password</Form.Label>
+          <Form.Group className='mb-3' controlId='formEmail'>
+            <Form.Label>Email address</Form.Label>
             <Form.Control
-              type='password'
-              name='confirmPassword'
-              placeholder='Confirm Password'
+              type='email'
+              name='email'
+              placeholder='Enter email'
               onChange={(e) => {
                 handleChange(e);
               }}
             />
           </Form.Group>
-        )}
 
-        <div>
-          <Button variant='primary' type='submit'>
-            {isRegistering ? 'Sign Up' : 'Login with user example'}
-          </Button>
+          <Form.Group className='mb-3' controlId='formPassword'>
+            <Form.Label>Password</Form.Label>
+            <Form.Control
+              type='password'
+              name='password'
+              placeholder='Password'
+              onChange={(e) => {
+                handleChange(e);
+              }}
+            />
+          </Form.Group>
 
-          <Button
-            variant='link'
-            onClick={() => setIsRegistering(!isRegistering)}
-          >
-            {isRegistering
-              ? 'Already have an account? LOGIN'
-              : "Don't have an account? SIGN UP"}
-          </Button>
-        </div>
-      </Form>
-    </div>
+          <div>
+            <Button variant='primary' type='submit'>
+              {isRegistering ? 'Sign Up' : 'Login'}
+            </Button>
+
+            <Button
+              variant='link'
+              onClick={() => setIsRegistering(!isRegistering)}
+            >
+              {isRegistering
+                ? 'Already have an account? LOGIN'
+                : "Don't have an account? SIGN UP"}
+            </Button>
+          </div>
+        </Form>
+      </div>
+    </>
   );
 };
 

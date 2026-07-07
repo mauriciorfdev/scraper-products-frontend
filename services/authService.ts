@@ -1,5 +1,5 @@
 const API_URL = import.meta.env.VITE_API_URL;
-import type { LoginData } from '../src/types';
+import type { LoginData, RegisterData } from '../src/types';
 
 const loginService = async (credentials: LoginData) => {
   const response = await fetch(`${API_URL}/auth/login`, {
@@ -49,4 +49,21 @@ const logoutService = async () => {
   return data;
 };
 
-export { loginService, getMe, logoutService };
+const registerService = async (credentials: RegisterData) => {
+  const response = await fetch(`${API_URL}/auth/register`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(credentials),
+  });
+  const data = await response.json();
+  console.log(data);
+
+  if (!response.ok) {
+    throw new Error(data.msg); //msje backend
+  }
+  return data;
+};
+
+export { loginService, getMe, logoutService, registerService };

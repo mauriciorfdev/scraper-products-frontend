@@ -1,4 +1,3 @@
-import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ProductsPage from '../pages/ProductsPage.tsx';
 import LoginPage from '../pages/LoginPage.tsx';

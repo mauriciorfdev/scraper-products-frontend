@@ -12,12 +12,17 @@ export interface LoginData {
   password: string;
 }
 
+export interface RegisterData extends LoginData {
+  name: string;
+}
+
 export interface AuthContextType {
   user: User | null;
   loading: boolean;
   checkAuth: () => Promise<void>;
   loginAuth: (credentials: LoginData) => Promise<void>;
   logoutAuth: () => Promise<void>;
+  registerAuth: (credentials: RegisterData) => Promise<void>;
 }
 
 export interface User {

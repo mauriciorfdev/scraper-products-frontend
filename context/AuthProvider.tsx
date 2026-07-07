@@ -1,7 +1,17 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
-import { getMe, loginService, logoutService } from '../services/authService';
-import type { LoginData, AuthContextType, User } from '../src/types';
+import {
+  getMe,
+  loginService,
+  logoutService,
+  registerService,
+} from '../services/authService';
+import type {
+  LoginData,
+  AuthContextType,
+  User,
+  RegisterData,
+} from '../src/types';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -37,8 +47,14 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     setUser(null);
   };
 
+  const registerAuth = async (credentials: RegisterData) => {
+    await registerService(credentials);
+  };
+
   return (
-    <AuthContext value={{ user, checkAuth, loading, loginAuth, logoutAuth }}>
+    <AuthContext
+      value={{ user, checkAuth, loading, loginAuth, logoutAuth, registerAuth }}
+    >
       {children}
     </AuthContext>
   );
