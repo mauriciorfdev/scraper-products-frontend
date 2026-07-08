@@ -10,9 +10,9 @@ const AdminTools = () => {
         menuVariant='dark'
         className='m-2'
       >
-        <NavDropdown.Item>Ver Usuarios</NavDropdown.Item>
+        <NavDropdown.Item href='/users'>Ver Usuarios</NavDropdown.Item>
         <NavDropdown.Divider />
-        <NavDropdown.Item>Scrape</NavDropdown.Item>
+        <NavDropdown.Item href='/scrape'>Scrape</NavDropdown.Item>
       </NavDropdown>
     </Nav>
   );
