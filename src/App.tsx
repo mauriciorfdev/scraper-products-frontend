@@ -6,18 +6,22 @@ import UsersPage from '../pages/UsersPage.tsx';
 import { Routes, Route } from 'react-router-dom';
 import PrivateRoutes from '../routes/PrivateRoutes.tsx';
 import PublicRoutes from '../routes/PublicRoutes.tsx';
+import AdminRoutes from '../routes/AdminRoutes.tsx';
 
 function App() {
   return (
     <>
       <Routes>
-        <Route element={<PrivateRoutes />}>
-          <Route path='/' element={<ProductsPage />}></Route>
-          <Route path='/users' element={<UsersPage />}></Route>
-        </Route>
-
         <Route element={<PublicRoutes />}>
           <Route path='/login' element={<LoginPage />}></Route>
+        </Route>
+
+        <Route element={<PrivateRoutes />}>
+          <Route path='/' element={<ProductsPage />}></Route>
+        </Route>
+
+        <Route element={<AdminRoutes />}>
+          <Route path='/users' element={<UsersPage />}></Route>
         </Route>
 
         <Route path='*' element={<NotFoundPage />}></Route>

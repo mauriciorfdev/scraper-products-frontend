@@ -2,12 +2,16 @@ import { Outlet, Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthProvider';
 import Loading from '../components/loading/Loading';
 
-const PrivateRoutes = () => {
+const AdminRoutes = () => {
   const { user, loading } = useAuth();
 
   if (loading) return <Loading />;
 
-  return user ? <Outlet /> : <Navigate to='/login' replace />;
+  if (!user) return <Navigate to='/login' replace />;
+
+  if (user.role !== 'admin') return <Navigate to='/' replace />;
+
+  return <Outlet />;
 };
 
-export default PrivateRoutes;
+export default AdminRoutes;
