@@ -31,3 +31,17 @@ export interface User {
   email: string;
   role: 'admin' | 'user';
 }
+
+//api error from backend
+export interface ApiErrorResponse {
+  message: string;
+  errors?: {
+    path: string;
+    message: string;
+  }[];
+}
+
+//api error on frontend service
+export interface ApiError extends ApiErrorResponse {
+  status: number;
+}

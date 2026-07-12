@@ -3,6 +3,9 @@ import Button from 'react-bootstrap/Button';
 import { useState } from 'react';
 import { useAuth } from '../context/AuthProvider';
 import { useNavigate } from 'react-router-dom';
+import { isApiError } from '../src/utils/apiError';
+import ErrorToast from '../components/error-toast/ErrorToast';
+import type { ApiError } from '../src/types';
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -11,6 +14,7 @@ const LoginPage = () => {
     name: '',
   });
   const [isRegistering, setIsRegistering] = useState(false);
+  const [submitError, setSubmitError] = useState<ApiError | null>(null);
 
   const { loginAuth, registerAuth } = useAuth();
   const navigate = useNavigate();
@@ -30,12 +34,26 @@ const LoginPage = () => {
       await loginAuth({ email, password });
       navigate('/', { replace: true });
     } catch (error) {
-      console.error('Error en el formulario de login:', error);
+      if (isApiError(error)) {
+        /* console.log(error.message);
+        console.log(error.status); */
+        setSubmitError(error);
+      } else {
+        /* console.log('error de red'); */
+        setSubmitError({
+          message: 'Connection Error',
+          status: 0,
+        });
+      }
     }
   }
 
   return (
     <>
+      {submitError && (
+        <ErrorToast error={submitError} onClose={() => setSubmitError(null)} />
+      )}
+
       <div className='d-flex justify-content-center align-items-center vh-100'>
         <Form onSubmit={handleSubmit}>
           {isRegistering && (
