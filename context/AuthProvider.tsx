@@ -43,8 +43,11 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const logoutAuth = async () => {
-    await logoutService();
-    setUser(null);
+    try {
+      await logoutService();
+    } finally {
+      setUser(null);
+    }
   };
 
   const registerAuth = async (credentials: RegisterData) => {
