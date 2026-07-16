@@ -2,27 +2,22 @@
 
 ## About Project
 
-Full-stack web application for visualizing and filtering supermarket product data.
+Frontend application for the Scraper Products project. It provides an interface for browsing and filtering supermarket product data collected through an automated scraping service.
 
-This web app allows user to filter some products by ingredients, a feature that is not currently available on the supermarket website.
-
-The product data is collected through automated scraping using Puppeteer.
+Users can filter products by ingredients, a feature that is not currently available on the supermarket website.
 
 ## Architecture
 
-- **Frontend (React + Vite + TS)** — Handles dynamic ingredient filtering and exclusion logic using regular expressions.
-
-- Backend (Express) — Exposes API endpoint to obtain data from the database.
-
-- Database (MongoDB) — Used to store products obtained by the scraper service.
-
-- Scraper Service (Puppeteer) — Automated process executed by Puppeteer internally to collect data from a specific website.
+- **Frontend** — Handles dynamic ingredient filtering and exclusion logic using regular expressions.
+- **Backend** — Provides authenticated access to product data through a REST API.
+- **Database** — Stores product information collected by the scraper service.
+- **Scraper Service** — Collects and updates product data using Puppeteer.
 
 ## Features
 
-- Dynamic ingredient inclusion/exclusion filtering
-- Regex-based ingredient matching
-- Responsive UI (React Bootstrap for UI Components)
+- Ingredient inclusion and exclusion filtering
+- Ingredient filtering using regular expressions
+- Responsive user interface
 
 ## Usage
 
