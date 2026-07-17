@@ -1,3 +1,4 @@
+const API_URL = import.meta.env.VITE_API_URL;
 import { useEffect, useState } from 'react';
 import Table from 'react-bootstrap/Table';
 import Badge from 'react-bootstrap/Badge';
@@ -25,7 +26,7 @@ const DataTable = ({ filters }: DataTableProps) => {
   }, []);
 
   async function fetchData() {
-    const url = 'http://localhost:5000/products';
+    const url = `${API_URL}/products`;
     try {
       const resp = await fetch(url);
       const localData = await resp.json();

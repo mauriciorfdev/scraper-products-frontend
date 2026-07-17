@@ -1,3 +1,4 @@
+import Button from 'react-bootstrap/Button';
 import Nav from 'react-bootstrap/Nav';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { Link } from 'react-router-dom';
@@ -15,9 +16,7 @@ const AdminTools = () => {
           Ver Usuarios
         </NavDropdown.Item>
         <NavDropdown.Divider />
-        <NavDropdown.Item as={Link} to='/scrape'>
-          Scrape
-        </NavDropdown.Item>
+        <NavDropdown.Item as={Button}>Scrape</NavDropdown.Item>
       </NavDropdown>
     </Nav>
   );
