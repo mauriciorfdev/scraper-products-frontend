@@ -5,6 +5,7 @@ import Table from 'react-bootstrap/Table';
 import Container from 'react-bootstrap/Container';
 import type { User } from '../src/types';
 import { useEffect, useState } from 'react';
+import TableLoader from '../components/table-loader/TableLoader';
 
 const TableHead = () => {
   return (
@@ -20,6 +21,7 @@ const TableHead = () => {
 
 const UsersPage = () => {
   const [usersData, setUsersData] = useState<User[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     fetchUsers();
@@ -28,12 +30,15 @@ const UsersPage = () => {
   async function fetchUsers() {
     const url = `${API_URL}/users`;
     try {
+      setIsLoading(true);
       const resp = await fetch(url, { credentials: 'include' });
       const data = await resp.json();
       setUsersData(data);
       console.log(data);
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -44,17 +49,22 @@ const UsersPage = () => {
         <h1>Users List</h1>
         <Table striped hover>
           <TableHead />
-          <tbody>
-            {usersData.map((user, index) => {
-              return (
-                <tr key={index}>
-                  <td>{user.name}</td>
-                  <td>{user.email}</td>
-                  <td>{user.role}</td>
-                </tr>
-              );
-            })}
-          </tbody>
+
+          {isLoading ? (
+            <TableLoader cols={3} message='Loading users...' />
+          ) : (
+            <tbody>
+              {usersData.map((user, index) => {
+                return (
+                  <tr key={index}>
+                    <td>{user.name}</td>
+                    <td>{user.email}</td>
+                    <td>{user.role}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          )}
         </Table>
       </Container>
     </>
