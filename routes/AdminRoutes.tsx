@@ -1,11 +1,11 @@
 import { Outlet, Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthProvider';
-import Loading from '../components/loading/Loading';
+import FullScreenLoader from '../components/fullscreen-loader/FullscreenLoader';
 
 const AdminRoutes = () => {
   const { user, loading } = useAuth();
 
-  if (loading) return <Loading />;
+  if (loading) return <FullScreenLoader />;
 
   if (!user) return <Navigate to='/login' replace />;
 
