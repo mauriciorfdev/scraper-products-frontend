@@ -5,7 +5,7 @@ import Badge from 'react-bootstrap/Badge';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import type { IngredientFilters } from '../../src/types.ts';
-import styles from './DataTable.module.css';
+import styles from './ProductsTable.module.css';
 import TableLoader from '../table-loader/TableLoader.tsx';
 
 const TableHead = () => {
@@ -22,11 +22,11 @@ const TableHead = () => {
   );
 };
 
-interface DataTableProps {
+interface ProductsTableProps {
   filters: IngredientFilters;
 }
 
-const DataTable = ({ filters }: DataTableProps) => {
+const ProductsTable = ({ filters }: ProductsTableProps) => {
   const [show, setShow] = useState(false);
   const [ingredientModal, setIngredientModal] = useState('');
   const handleClose = () => setShow(false);
@@ -167,4 +167,4 @@ const DataTable = ({ filters }: DataTableProps) => {
   );
 };
 
-export default DataTable;
+export default ProductsTable;

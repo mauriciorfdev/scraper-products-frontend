@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import DataTable from '../components/data-table/DataTable';
+import ProductsTable from '../components/products-table/ProductsTable';
 import IngredientFilterBar from '../components/ingredient-filter-bar/IngredientFilterBar';
 import type { IngredientFilters } from '../src/types';
 import Header from '../components/header/Header';
@@ -20,7 +20,7 @@ const ProductsPage = () => {
           setFilters={setFilters}
         ></IngredientFilterBar>
 
-        <DataTable filters={filters} />
+        <ProductsTable filters={filters} />
       </div>
     </>
   );
