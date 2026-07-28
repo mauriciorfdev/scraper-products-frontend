@@ -126,15 +126,18 @@ const ProductsTable = ({ filters }: ProductsTableProps) => {
                     {showPreview ? (
                       <>
                         {ingredientsArr.slice(0, 4) + '...'}
-                        <Button
-                          size='sm'
-                          onClick={() => {
-                            handleShow();
-                            setIngredientModal(ingredients);
-                          }}
-                        >
-                          Ver más
-                        </Button>
+                        <div>
+                          <Button
+                            size='sm'
+                            onClick={() => {
+                              handleShow();
+                              setIngredientModal(ingredients);
+                            }}
+                            variant='outline-light'
+                          >
+                            Ver más
+                          </Button>
+                        </div>
                       </>
                     ) : (
                       ingredients
