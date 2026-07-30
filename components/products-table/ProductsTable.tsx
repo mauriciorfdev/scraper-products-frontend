@@ -4,7 +4,7 @@ import Table from 'react-bootstrap/Table';
 import Badge from 'react-bootstrap/Badge';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import type { IngredientFilters } from '../../src/types.ts';
+import type { IngredientFilters, Product } from '../../src/types.ts';
 import styles from './ProductsTable.module.css';
 import TableLoader from '../table-loader/TableLoader.tsx';
 
@@ -12,7 +12,6 @@ const TableHead = () => {
   return (
     <thead>
       <tr>
-        <th>#</th>
         <th>Name</th>
         <th>Brand</th>
         <th>Ingredients</th>
@@ -28,12 +27,50 @@ interface ProductsTableProps {
 
 const ProductsTable = ({ filters }: ProductsTableProps) => {
   const [show, setShow] = useState(false);
-  const [ingredientModal, setIngredientModal] = useState('');
+  const [selectedProduct, setSelectedProduct] = useState<Product | undefined>();
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-  const [productsData, setProductsData] = useState<any[]>([]);
+  const [productsData, setProductsData] = useState<Product[]>([]);
   const noResultsMessage = `We couldn't find any products with that ingredient.`;
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const mockAiData = {
+    novaClassification: 4,
+    novaJustification:
+      'Clasificado NOVA 4 por la presencia de conservantes sintéticos (benzoato de sodio y sorbato de potasio).',
+    summary:
+      'Salsa de tomate procesada con sal, conservantes sintéticos y libre de azúcares añadidos.',
+    sugars: [],
+    diets: [
+      {
+        name: 'Vegana',
+        compatible: true,
+        reasons: [],
+      },
+      {
+        name: 'Vegetariana',
+        compatible: true,
+        reasons: [],
+      },
+      {
+        name: 'Sin Gluten',
+        compatible: true,
+        reasons: [],
+      },
+    ],
+    additives: [
+      {
+        name: 'sorbato de potasio',
+        code: 'E202',
+        purpose: 'Conservante',
+      },
+      {
+        name: 'benzoato de sodio',
+        code: 'E211',
+        purpose: 'Conservante',
+      },
+    ],
+    allergens: [],
+  };
 
   //Fetch all products data
   useEffect(() => {
@@ -53,6 +90,12 @@ const ProductsTable = ({ filters }: ProductsTableProps) => {
     } finally {
       setIsLoading(false);
     }
+  }
+  /* productId: string | undefined*/
+  async function handleAnalysis(productId: string) {
+    console.log('analyzing...');
+    console.log(productId);
+    console.log(mockAiData);
   }
 
   //Filter products by ingredient (input)
@@ -109,14 +152,13 @@ const ProductsTable = ({ filters }: ProductsTableProps) => {
           <TableLoader cols={5} message='Loading products...' />
         ) : (
           <tbody>
-            {filteredData.map((product, index) => {
+            {filteredData.map((product) => {
               const ingredients = product.ingredients;
               const ingredientsArr = getIngredientsList(ingredients);
               const ingredientsSize = ingredientsArr.length;
               const showPreview = ingredientsSize > 5;
               return (
-                <tr key={index}>
-                  <td>{index + 1}</td>
+                <tr key={product?.id}>
                   <td width={'200px'}>{product.name}</td>
                   <td width={'200px'}>{product.brand}</td>
                   <td width={'100px'}>
@@ -131,7 +173,7 @@ const ProductsTable = ({ filters }: ProductsTableProps) => {
                             size='sm'
                             onClick={() => {
                               handleShow();
-                              setIngredientModal(ingredients);
+                              setSelectedProduct(product);
                             }}
                             variant='outline-light'
                           >
@@ -159,8 +201,18 @@ const ProductsTable = ({ filters }: ProductsTableProps) => {
         <Modal.Header closeButton>
           <Modal.Title>Ingredients List</Modal.Title>
         </Modal.Header>
-        <Modal.Body>{ingredientModal}</Modal.Body>
+        <Modal.Body>{selectedProduct?.ingredients}</Modal.Body>
         <Modal.Footer>
+          <Button
+            variant='primary'
+            onClick={() => {
+              if (selectedProduct?.id) {
+                handleAnalysis(selectedProduct.id);
+              }
+            }}
+          >
+            Analyze...
+          </Button>
           <Button variant='secondary' onClick={handleClose}>
             Close
           </Button>

@@ -31,6 +31,34 @@ export interface User {
   email: string;
   role: 'admin' | 'user';
 }
+export interface Product {
+  id: string;
+  name: string;
+  brand: string;
+  ingredients: string;
+  ai_analysis?: AiAnalysis;
+}
+
+export interface AiAnalysis {
+  novaClassification: number;
+  novaJustification: string;
+  summary: string;
+  sugars: string[];
+  allergens: string[];
+  diets: Diet[];
+  additives: Additive[];
+}
+
+interface Diet {
+  name: string;
+  compatible: boolean;
+  reasons: string[];
+}
+interface Additive {
+  name: string;
+  code: string;
+  purpose: string;
+}
 
 //api error from backend
 export interface ApiErrorResponse {
