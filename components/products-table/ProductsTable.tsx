@@ -94,8 +94,23 @@ const ProductsTable = ({ filters }: ProductsTableProps) => {
   /* productId: string | undefined*/
   async function handleAnalysis(productId: string) {
     console.log('analyzing...');
-    console.log(productId);
-    console.log(mockAiData);
+    /* console.log(productId);
+    console.log(mockAiData); */
+    const url = `${API_URL}/products/${productId}`;
+    try {
+      const resp = await fetch(url, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify(mockAiData),
+      });
+      const data = await resp.json();
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   //Filter products by ingredient (input)
