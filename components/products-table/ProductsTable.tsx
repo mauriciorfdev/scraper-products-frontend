@@ -14,6 +14,7 @@ const TableHead = () => {
       <tr>
         <th>Name</th>
         <th>Brand</th>
+        <th>Classification</th>
         <th>Ingredients</th>
         <th>List</th>
       </tr>
@@ -33,44 +34,9 @@ const ProductsTable = ({ filters }: ProductsTableProps) => {
   const [productsData, setProductsData] = useState<Product[]>([]);
   const noResultsMessage = `We couldn't find any products with that ingredient.`;
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const mockAiData = {
-    novaClassification: 4,
-    novaJustification:
-      'Clasificado NOVA 4 por la presencia de conservantes sintéticos (benzoato de sodio y sorbato de potasio).',
-    summary:
-      'Salsa de tomate procesada con sal, conservantes sintéticos y libre de azúcares añadidos.',
-    sugars: [],
-    diets: [
-      {
-        name: 'Vegana',
-        compatible: true,
-        reasons: [],
-      },
-      {
-        name: 'Vegetariana',
-        compatible: true,
-        reasons: [],
-      },
-      {
-        name: 'Sin Gluten',
-        compatible: true,
-        reasons: [],
-      },
-    ],
-    additives: [
-      {
-        name: 'sorbato de potasio',
-        code: 'E202',
-        purpose: 'Conservante',
-      },
-      {
-        name: 'benzoato de sodio',
-        code: 'E211',
-        purpose: 'Conservante',
-      },
-    ],
-    allergens: [],
-  };
+  const [analyzingProductId, setAnalyzingProductId] = useState<string | null>(
+    null,
+  );
 
   //Fetch all products data
   useEffect(() => {
@@ -93,23 +59,23 @@ const ProductsTable = ({ filters }: ProductsTableProps) => {
   }
   /* productId: string | undefined*/
   async function handleAnalysis(productId: string) {
+    setAnalyzingProductId(productId);
     console.log('analyzing...');
-    /* console.log(productId);
-    console.log(mockAiData); */
-    const url = `${API_URL}/products/${productId}`;
+    const url = `${API_URL}/products/${productId}/analysis`;
     try {
       const resp = await fetch(url, {
-        method: 'PATCH',
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         credentials: 'include',
-        body: JSON.stringify(mockAiData),
       });
       const data = await resp.json();
       console.log(data);
     } catch (error) {
       console.log(error);
+    } finally {
+      setAnalyzingProductId(null);
     }
   }
 
@@ -176,29 +142,30 @@ const ProductsTable = ({ filters }: ProductsTableProps) => {
                 <tr key={product?.id}>
                   <td width={'200px'}>{product.name}</td>
                   <td width={'200px'}>{product.brand}</td>
+                  <td width={'200px'}>
+                    {product.aiAnalysis
+                      ? product.aiAnalysis.novaClassification
+                      : 'Pending...'}
+                  </td>
                   <td width={'100px'}>
                     <Badge bg='primary'>{ingredientsSize}</Badge>
                   </td>
                   <td width={'300px'}>
-                    {showPreview ? (
-                      <>
-                        {ingredientsArr.slice(0, 4) + '...'}
-                        <div>
-                          <Button
-                            size='sm'
-                            onClick={() => {
-                              handleShow();
-                              setSelectedProduct(product);
-                            }}
-                            variant='outline-light'
-                          >
-                            Ver más
-                          </Button>
-                        </div>
-                      </>
-                    ) : (
-                      ingredients
-                    )}
+                    {showPreview
+                      ? ingredientsArr.slice(0, 4) + '...'
+                      : ingredients}
+                    <div>
+                      <Button
+                        size='sm'
+                        onClick={() => {
+                          handleShow();
+                          setSelectedProduct(product);
+                        }}
+                        variant='outline-light'
+                      >
+                        Ver más
+                      </Button>
+                    </div>
                   </td>
                 </tr>
               );
@@ -225,9 +192,13 @@ const ProductsTable = ({ filters }: ProductsTableProps) => {
                 handleAnalysis(selectedProduct.id);
               }
             }}
+            disabled={analyzingProductId === selectedProduct?.id}
           >
-            Analyze...
+            {analyzingProductId === selectedProduct?.id
+              ? 'Analyzing...'
+              : 'Analyze'}
           </Button>
+
           <Button variant='secondary' onClick={handleClose}>
             Close
           </Button>

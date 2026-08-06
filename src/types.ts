@@ -36,7 +36,7 @@ export interface Product {
   name: string;
   brand: string;
   ingredients: string;
-  ai_analysis?: AiAnalysis;
+  aiAnalysis?: AiAnalysis;
 }
 
 export interface AiAnalysis {
