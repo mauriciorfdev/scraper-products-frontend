@@ -4,6 +4,7 @@ import Table from 'react-bootstrap/Table';
 import Badge from 'react-bootstrap/Badge';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import Stack from 'react-bootstrap/Stack';
 import type { IngredientFilters, Product } from '../../src/types.ts';
 import styles from './ProductsTable.module.css';
 import TableLoader from '../table-loader/TableLoader.tsx';
@@ -15,10 +16,42 @@ const TableHead = () => {
         <th>Name</th>
         <th>Brand</th>
         <th>Classification</th>
+        <th>Added Sugar</th>
         <th>Ingredients</th>
-        <th>List</th>
       </tr>
     </thead>
+  );
+};
+
+const NovaCell = ({ product }: { product: Product }) => {
+  return (
+    <td width={'200px'}>
+      {product.aiAnalysis ? (
+        <Badge pill>{'NOVA ' + product.aiAnalysis.novaClassification}</Badge>
+      ) : (
+        'Pending...'
+      )}
+    </td>
+  );
+};
+
+const SugarCell = ({ product }: { product: Product }) => {
+  return (
+    <td>
+      {product.aiAnalysis ? (
+        product.aiAnalysis.sugars.length != 0 ? (
+          <Stack gap={1}>
+            {product.aiAnalysis.sugars.map((s, index) => (
+              <Badge key={index}>{s}</Badge>
+            ))}
+          </Stack>
+        ) : (
+          <Badge bg='success'>{'Sin azúcar añadido'}</Badge>
+        )
+      ) : (
+        'Pending...'
+      )}
+    </td>
   );
 };
 
@@ -137,35 +170,38 @@ const ProductsTable = ({ filters }: ProductsTableProps) => {
               const ingredients = product.ingredients;
               const ingredientsArr = getIngredientsList(ingredients);
               const ingredientsSize = ingredientsArr.length;
-              const showPreview = ingredientsSize > 5;
+              const showPreview = ingredientsSize > 3;
               return (
                 <tr key={product?.id}>
-                  <td width={'200px'}>{product.name}</td>
-                  <td width={'200px'}>{product.brand}</td>
-                  <td width={'200px'}>
-                    {product.aiAnalysis
-                      ? product.aiAnalysis.novaClassification
-                      : 'Pending...'}
-                  </td>
-                  <td width={'100px'}>
-                    <Badge bg='primary'>{ingredientsSize}</Badge>
-                  </td>
-                  <td width={'300px'}>
-                    {showPreview
-                      ? ingredientsArr.slice(0, 4) + '...'
-                      : ingredients}
-                    <div>
-                      <Button
-                        size='sm'
-                        onClick={() => {
-                          handleShow();
-                          setSelectedProduct(product);
-                        }}
-                        variant='outline-light'
-                      >
-                        Ver más
-                      </Button>
-                    </div>
+                  <td>{product.name}</td>
+                  <td>{product.brand}</td>
+
+                  <NovaCell product={product} />
+                  <SugarCell product={product} />
+
+                  <td>
+                    <Stack gap={1}>
+                      <Badge bg='secondary' className='align-self-center'>
+                        {ingredientsSize}
+                      </Badge>
+                      <span className='text-muted'>
+                        {showPreview
+                          ? ingredientsArr.slice(0, 3) + '...'
+                          : ingredients}
+                      </span>
+                      <div>
+                        <Button
+                          size='sm'
+                          onClick={() => {
+                            handleShow();
+                            setSelectedProduct(product);
+                          }}
+                          variant='outline-light'
+                        >
+                          Ver más
+                        </Button>
+                      </div>
+                    </Stack>
                   </td>
                 </tr>
               );
