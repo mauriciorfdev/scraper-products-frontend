@@ -55,6 +55,69 @@ const SugarCell = ({ product }: { product: Product }) => {
   );
 };
 
+const IngredientCell = ({
+  product,
+  handleShow,
+}: {
+  product: Product;
+  handleShow: (product: Product) => void;
+}) => {
+  const ingredients = product.ingredients;
+  const ingredientsArr = getIngredientsList(ingredients);
+  const ingredientsSize = ingredientsArr.length;
+  const showPreview = ingredientsSize > 3;
+  return (
+    <td>
+      <Stack gap={1}>
+        <Badge bg='secondary' className='align-self-center'>
+          {ingredientsSize}
+        </Badge>
+        <span className='text-muted'>
+          {showPreview ? ingredientsArr.slice(0, 3) + '...' : ingredients}
+        </span>
+        <div>
+          <Button
+            size='sm'
+            onClick={() => {
+              handleShow(product);
+            }}
+            variant='outline-light'
+          >
+            Ver más
+          </Button>
+        </div>
+      </Stack>
+    </td>
+  );
+};
+
+function splitByConjunction(mainResults: string[]) {
+  //regex: dividir por y/Y el grupo ppal de ing si corresponde
+  const nestedArr = mainResults.map((elem) => elem.split(/\s*y\s+/i));
+  //limpar resultado
+  const cleanArr = nestedArr
+    .flat()
+    .map((e) => e.trim())
+    .filter(Boolean);
+  return cleanArr;
+}
+
+function getIngredientsList(ingredients: string) {
+  //regex: (main-group)(inner-group)
+  const regex = /([^,(.]+)(?:\(([^)]*)\))?/g;
+  const matches = [...ingredients.matchAll(regex)];
+  const results = matches.map((m) => {
+    return {
+      main: m[1].trim(),
+      inner: m[2]?.trim() ?? null,
+    };
+  });
+  //solo grupo ppal de ing.
+  const mainResults = results.map((r) => r.main);
+  const ingredientsList = splitByConjunction(mainResults);
+  return ingredientsList;
+}
+
 interface ProductsTableProps {
   filters: IngredientFilters;
 }
@@ -62,8 +125,6 @@ interface ProductsTableProps {
 const ProductsTable = ({ filters }: ProductsTableProps) => {
   const [show, setShow] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | undefined>();
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
   const [productsData, setProductsData] = useState<Product[]>([]);
   const noResultsMessage = `We couldn't find any products with that ingredient.`;
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -112,8 +173,12 @@ const ProductsTable = ({ filters }: ProductsTableProps) => {
     }
   }
 
-  //Filter products by ingredient (input)
+  const handleShow = (product: Product) => {
+    setSelectedProduct(product);
+    setShow(true);
+  };
 
+  //Filter products by ingredient (input)
   const filteredData = productsData.filter((product) => {
     //true if product includes ingredient (input)
     const includeIngredient = product.ingredients
@@ -126,33 +191,6 @@ const ProductsTable = ({ filters }: ProductsTableProps) => {
         ? includeIngredient
         : !includeIngredient;
   });
-
-  function splitByConjunction(mainResults: string[]) {
-    //regex: dividir por y/Y el grupo ppal de ing si corresponde
-    const nestedArr = mainResults.map((elem) => elem.split(/\s*y\s+/i));
-    //limpar resultado
-    const cleanArr = nestedArr
-      .flat()
-      .map((e) => e.trim())
-      .filter(Boolean);
-    return cleanArr;
-  }
-
-  function getIngredientsList(ingredients: string) {
-    //regex: (main-group)(inner-group)
-    const regex = /([^,(.]+)(?:\(([^)]*)\))?/g;
-    const matches = [...ingredients.matchAll(regex)];
-    const results = matches.map((m) => {
-      return {
-        main: m[1].trim(),
-        inner: m[2]?.trim() ?? null,
-      };
-    });
-    //solo grupo ppal de ing.
-    const mainResults = results.map((r) => r.main);
-    const ingredientsList = splitByConjunction(mainResults);
-    return ingredientsList;
-  }
 
   return (
     <div className={styles.container}>
@@ -167,42 +205,13 @@ const ProductsTable = ({ filters }: ProductsTableProps) => {
         ) : (
           <tbody>
             {filteredData.map((product) => {
-              const ingredients = product.ingredients;
-              const ingredientsArr = getIngredientsList(ingredients);
-              const ingredientsSize = ingredientsArr.length;
-              const showPreview = ingredientsSize > 3;
               return (
                 <tr key={product?.id}>
                   <td>{product.name}</td>
                   <td>{product.brand}</td>
-
                   <NovaCell product={product} />
                   <SugarCell product={product} />
-
-                  <td>
-                    <Stack gap={1}>
-                      <Badge bg='secondary' className='align-self-center'>
-                        {ingredientsSize}
-                      </Badge>
-                      <span className='text-muted'>
-                        {showPreview
-                          ? ingredientsArr.slice(0, 3) + '...'
-                          : ingredients}
-                      </span>
-                      <div>
-                        <Button
-                          size='sm'
-                          onClick={() => {
-                            handleShow();
-                            setSelectedProduct(product);
-                          }}
-                          variant='outline-light'
-                        >
-                          Ver más
-                        </Button>
-                      </div>
-                    </Stack>
-                  </td>
+                  <IngredientCell product={product} handleShow={handleShow} />
                 </tr>
               );
             })}
@@ -212,7 +221,7 @@ const ProductsTable = ({ filters }: ProductsTableProps) => {
 
       <Modal
         show={show}
-        onHide={handleClose}
+        onHide={() => setShow(false)}
         backdrop='static'
         keyboard={false}
       >
@@ -235,7 +244,7 @@ const ProductsTable = ({ filters }: ProductsTableProps) => {
               : 'Analyze'}
           </Button>
 
-          <Button variant='secondary' onClick={handleClose}>
+          <Button variant='secondary' onClick={() => setShow(false)}>
             Close
           </Button>
         </Modal.Footer>
