@@ -3,11 +3,11 @@ import { useEffect, useState } from 'react';
 import Table from 'react-bootstrap/Table';
 import Badge from 'react-bootstrap/Badge';
 import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
 import Stack from 'react-bootstrap/Stack';
 import type { IngredientFilters, Product } from '../../src/types.ts';
 import styles from './ProductsTable.module.css';
 import TableLoader from '../table-loader/TableLoader.tsx';
+import ProductModal from '../product-modal/ProductModal.tsx';
 
 const TableHead = () => {
   return (
@@ -199,7 +199,6 @@ const ProductsTable = ({ filters }: ProductsTableProps) => {
 
       <Table striped hover>
         <TableHead />
-
         {isLoading ? (
           <TableLoader cols={5} message='Loading products...' />
         ) : (
@@ -219,36 +218,13 @@ const ProductsTable = ({ filters }: ProductsTableProps) => {
         )}
       </Table>
 
-      <Modal
+      <ProductModal
         show={show}
-        onHide={() => setShow(false)}
-        backdrop='static'
-        keyboard={false}
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Ingredients List</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>{selectedProduct?.ingredients}</Modal.Body>
-        <Modal.Footer>
-          <Button
-            variant='primary'
-            onClick={() => {
-              if (selectedProduct?.id) {
-                handleAnalysis(selectedProduct.id);
-              }
-            }}
-            disabled={analyzingProductId === selectedProduct?.id}
-          >
-            {analyzingProductId === selectedProduct?.id
-              ? 'Analyzing...'
-              : 'Analyze'}
-          </Button>
-
-          <Button variant='secondary' onClick={() => setShow(false)}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
+        setShow={setShow}
+        selectedProduct={selectedProduct}
+        handleAnalysis={handleAnalysis}
+        analyzingProductId={analyzingProductId}
+      ></ProductModal>
     </div>
   );
 };
