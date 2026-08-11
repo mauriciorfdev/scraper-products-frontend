@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import Table from 'react-bootstrap/Table';
 import Badge from 'react-bootstrap/Badge';
 import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 import Stack from 'react-bootstrap/Stack';
 import type { IngredientFilters, Product } from '../../src/types.ts';
 import styles from './ProductsTable.module.css';
@@ -24,14 +25,57 @@ const TableHead = () => {
 };
 
 const NovaCell = ({ product }: { product: Product }) => {
+  const [showNovaModal, setShowNovaModal] = useState(false);
+  const novaClassification = product.aiAnalysis?.novaClassification || 0;
+  const novaColor: Record<number, string> = {
+    1: '#10B981',
+    2: '#caad07',
+    3: '#df5e02',
+    4: '#8f1414',
+  };
   return (
-    <td width={'200px'}>
-      {product.aiAnalysis ? (
-        <Badge pill>{'NOVA ' + product.aiAnalysis.novaClassification}</Badge>
-      ) : (
-        'Pending...'
-      )}
-    </td>
+    <>
+      <td>
+        {product.aiAnalysis ? (
+          <div className='align-middle'>
+            <span
+              className='badge rounded-pill'
+              style={{
+                backgroundColor: novaColor[novaClassification],
+                color: 'white',
+              }}
+            >
+              {'NOVA ' + novaClassification}
+            </span>
+            <Button
+              variant='outline-light'
+              className='mt-3 badge'
+              onClick={() => setShowNovaModal(true)}
+            >
+              Ver Explicación
+            </Button>
+          </div>
+        ) : (
+          'Pending...'
+        )}
+      </td>
+      <Modal
+        show={showNovaModal}
+        onHide={() => setShowNovaModal(false)}
+        backdrop='static'
+        keyboard={false}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>¿Por qué NOVA {novaClassification}?</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>{product.aiAnalysis?.novaJustification}</Modal.Body>
+        <Modal.Footer>
+          <Button variant='secondary' onClick={() => setShowNovaModal(false)}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
   );
 };
 
