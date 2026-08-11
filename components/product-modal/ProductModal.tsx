@@ -18,6 +18,9 @@ const ProductModal = ({
   handleAnalysis,
   analyzingProductId,
 }: ProductModalProps) => {
+  const isNotAnalyzed =
+    selectedProduct?.aiAnalysis === null ||
+    selectedProduct?.aiAnalysis === undefined;
   const allergens = selectedProduct?.aiAnalysis?.allergens || [];
   const additives = selectedProduct?.aiAnalysis?.additives || [];
   return (
@@ -33,38 +36,61 @@ const ProductModal = ({
 
       <Modal.Body>
         <ListGroup variant='flush'>
-          <ListGroup.Item>{selectedProduct?.ingredients}</ListGroup.Item>
-          <ListGroup.Item className='mt-3'>
-            <div className='h5'>Resumen</div>
-            {selectedProduct?.aiAnalysis?.summary}
+          <ListGroup.Item className='border rounded text-muted'>
+            {selectedProduct?.ingredients}
           </ListGroup.Item>
-          <ListGroup.Item className='mt-3'>
-            <div className='h5'>Alérgenos</div>
-            {allergens.length === 0 ? (
-              'Ninguno'
-            ) : (
-              <ul>
-                {allergens.map((allergen) => (
-                  <li key={allergen}>{allergen}</li>
-                ))}
-              </ul>
-            )}
-          </ListGroup.Item>
-          <ListGroup.Item className='mt-3'>
-            <div className='h5'>Aditivos</div>
-            {additives.length === 0 ? (
-              'Sin aditivos'
-            ) : (
-              <ul>
-                {additives.map((additive) => (
-                  <li>
-                    {additive.name} - {additive.code}
-                    <span className='fst-italic'> ({additive.purpose})</span>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </ListGroup.Item>
+
+          {isNotAnalyzed ? (
+            <ListGroup.Item>
+              <div className='text-center py-4'>
+                <span>⚠️</span>
+                <strong>
+                  Este producto aún no ha sido analizado por la IA
+                </strong>
+                <p className='text-muted small mt-4'>
+                  Los datos de resumen, alérgenos y aditivos se generarán
+                  automáticamente una vez que inicies el proceso.
+                </p>
+              </div>
+            </ListGroup.Item>
+          ) : (
+            <>
+              <ListGroup.Item className='mt-3'>
+                <div className='h5'>Resumen</div>
+                {selectedProduct?.aiAnalysis?.summary}
+              </ListGroup.Item>
+              <ListGroup.Item className='mt-3'>
+                <div className='h5'>Alérgenos</div>
+                {allergens.length === 0 ? (
+                  'Ninguno'
+                ) : (
+                  <ul>
+                    {allergens.map((allergen) => (
+                      <li key={allergen}>{allergen}</li>
+                    ))}
+                  </ul>
+                )}
+              </ListGroup.Item>
+              <ListGroup.Item className='mt-3'>
+                <div className='h5'>Aditivos</div>
+                {additives.length === 0 ? (
+                  'Sin aditivos'
+                ) : (
+                  <ul>
+                    {additives.map((additive) => (
+                      <li>
+                        {additive.name} - {additive.code}
+                        <span className='fst-italic'>
+                          {' '}
+                          ({additive.purpose})
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </ListGroup.Item>
+            </>
+          )}
         </ListGroup>
       </Modal.Body>
 
