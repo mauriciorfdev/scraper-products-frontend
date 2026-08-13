@@ -7,16 +7,12 @@ interface ProductModalProps {
   show: boolean;
   setShow: React.Dispatch<React.SetStateAction<boolean>>;
   selectedProduct: Product | undefined;
-  handleAnalysis: (productId: string) => Promise<void>;
-  analyzingProductId: string | null;
 }
 
 const ProductModal = ({
   show,
   setShow,
   selectedProduct,
-  handleAnalysis,
-  analyzingProductId,
 }: ProductModalProps) => {
   const isNotAnalyzed =
     selectedProduct?.aiAnalysis === null ||
@@ -62,11 +58,11 @@ const ProductModal = ({
               <ListGroup.Item className='mt-3'>
                 <div className='h5'>Alérgenos</div>
                 {allergens.length === 0 ? (
-                  'Ninguno'
+                  'No contiene (Soya/Gluten/Leche/Trigo)'
                 ) : (
                   <ul>
-                    {allergens.map((allergen) => (
-                      <li key={allergen}>{allergen}</li>
+                    {allergens.map((allergen, index) => (
+                      <li key={index}>{allergen}</li>
                     ))}
                   </ul>
                 )}
@@ -77,8 +73,8 @@ const ProductModal = ({
                   'Sin aditivos'
                 ) : (
                   <ul>
-                    {additives.map((additive) => (
-                      <li>
+                    {additives.map((additive, index) => (
+                      <li key={index}>
                         {additive.name} - {additive.code}
                         <span className='fst-italic'>
                           {' '}
@@ -95,20 +91,6 @@ const ProductModal = ({
       </Modal.Body>
 
       <Modal.Footer>
-        <Button
-          variant='primary'
-          onClick={() => {
-            if (selectedProduct?.id) {
-              handleAnalysis(selectedProduct.id);
-            }
-          }}
-          disabled={analyzingProductId === selectedProduct?.id}
-        >
-          {analyzingProductId === selectedProduct?.id
-            ? 'Analyzing...'
-            : 'Analyze'}
-        </Button>
-
         <Button variant='secondary' onClick={() => setShow(false)}>
           Close
         </Button>

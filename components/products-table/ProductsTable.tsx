@@ -19,6 +19,7 @@ const TableHead = () => {
         <th>Classification</th>
         <th>Added Sugar</th>
         <th>Ingredients</th>
+        <th>Actions</th>
       </tr>
     </thead>
   );
@@ -135,6 +136,30 @@ const IngredientCell = ({
   );
 };
 
+const ActionCell = ({
+  product,
+  handleAnalysis,
+  analyzingProductId,
+}: {
+  product: Product;
+  handleAnalysis: (productId: string) => Promise<void>;
+  analyzingProductId: string | null;
+}) => {
+  return (
+    <td>
+      <Button
+        variant='outline-light'
+        onClick={() => {
+          handleAnalysis(product.id);
+        }}
+        disabled={analyzingProductId === product.id}
+      >
+        {analyzingProductId === product.id ? 'Analizando...' : 'Analizar'}
+      </Button>
+    </td>
+  );
+};
+
 function splitByConjunction(mainResults: string[]) {
   //regex: dividir por y/Y el grupo ppal de ing si corresponde
   const nestedArr = mainResults.map((elem) => elem.split(/\s*y\s+/i));
@@ -244,7 +269,7 @@ const ProductsTable = ({ filters }: ProductsTableProps) => {
       <Table striped hover>
         <TableHead />
         {isLoading ? (
-          <TableLoader cols={5} message='Loading products...' />
+          <TableLoader cols={6} message='Loading products...' />
         ) : (
           <tbody>
             {filteredData.map((product) => {
@@ -255,6 +280,11 @@ const ProductsTable = ({ filters }: ProductsTableProps) => {
                   <NovaCell product={product} />
                   <SugarCell product={product} />
                   <IngredientCell product={product} handleShow={handleShow} />
+                  <ActionCell
+                    product={product}
+                    handleAnalysis={handleAnalysis}
+                    analyzingProductId={analyzingProductId}
+                  />
                 </tr>
               );
             })}
@@ -266,8 +296,6 @@ const ProductsTable = ({ filters }: ProductsTableProps) => {
         show={show}
         setShow={setShow}
         selectedProduct={selectedProduct}
-        handleAnalysis={handleAnalysis}
-        analyzingProductId={analyzingProductId}
       ></ProductModal>
     </div>
   );
