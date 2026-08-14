@@ -9,6 +9,8 @@ import type { IngredientFilters, Product } from '../../src/types.ts';
 import styles from './ProductsTable.module.css';
 import TableLoader from '../table-loader/TableLoader.tsx';
 import ProductModal from '../product-modal/ProductModal.tsx';
+import ErrorToast from '../error-toast/ErrorToast.tsx';
+import { ApiError } from '../../src/errors/ApiError.ts';
 
 const TableHead = () => {
   return (
@@ -200,6 +202,7 @@ const ProductsTable = ({ filters }: ProductsTableProps) => {
   const [analyzingProductId, setAnalyzingProductId] = useState<string | null>(
     null,
   );
+  const [analysisError, setAnalysisError] = useState<ApiError | null>(null);
 
   //Fetch all products data
   useEffect(() => {
@@ -223,7 +226,6 @@ const ProductsTable = ({ filters }: ProductsTableProps) => {
   /* productId: string | undefined*/
   async function handleAnalysis(productId: string) {
     setAnalyzingProductId(productId);
-    console.log('analyzing...');
     const url = `${API_URL}/products/${productId}/analysis`;
     try {
       const resp = await fetch(url, {
@@ -235,8 +237,17 @@ const ProductsTable = ({ filters }: ProductsTableProps) => {
       });
       const data = await resp.json();
       console.log(data);
+      if (!resp.ok) {
+        throw new ApiError(data.message, resp.status, data.errors);
+      }
     } catch (error) {
-      console.log(error);
+      if (error instanceof ApiError) {
+        console.log(error);
+        setAnalysisError(error);
+      } else {
+        console.log('error de red...');
+        setAnalysisError(new ApiError('error de red', 0));
+      }
     } finally {
       setAnalyzingProductId(null);
     }
@@ -262,42 +273,50 @@ const ProductsTable = ({ filters }: ProductsTableProps) => {
   });
 
   return (
-    <div className={styles.container}>
-      <h1>Products ({filteredData.length})</h1>
-      <p>{!isLoading && filteredData.length == 0 && noResultsMessage}</p>
+    <>
+      {analysisError && (
+        <ErrorToast
+          error={analysisError}
+          onClose={() => setAnalysisError(null)}
+        />
+      )}
+      <div className={styles.container}>
+        <h1>Products ({filteredData.length})</h1>
+        <p>{!isLoading && filteredData.length == 0 && noResultsMessage}</p>
 
-      <Table striped hover>
-        <TableHead />
-        {isLoading ? (
-          <TableLoader cols={6} message='Loading products...' />
-        ) : (
-          <tbody>
-            {filteredData.map((product) => {
-              return (
-                <tr key={product?.id}>
-                  <td>{product.name}</td>
-                  <td>{product.brand}</td>
-                  <NovaCell product={product} />
-                  <SugarCell product={product} />
-                  <IngredientCell product={product} handleShow={handleShow} />
-                  <ActionCell
-                    product={product}
-                    handleAnalysis={handleAnalysis}
-                    analyzingProductId={analyzingProductId}
-                  />
-                </tr>
-              );
-            })}
-          </tbody>
-        )}
-      </Table>
+        <Table striped hover>
+          <TableHead />
+          {isLoading ? (
+            <TableLoader cols={6} message='Loading products...' />
+          ) : (
+            <tbody>
+              {filteredData.map((product) => {
+                return (
+                  <tr key={product?.id}>
+                    <td>{product.name}</td>
+                    <td>{product.brand}</td>
+                    <NovaCell product={product} />
+                    <SugarCell product={product} />
+                    <IngredientCell product={product} handleShow={handleShow} />
+                    <ActionCell
+                      product={product}
+                      handleAnalysis={handleAnalysis}
+                      analyzingProductId={analyzingProductId}
+                    />
+                  </tr>
+                );
+              })}
+            </tbody>
+          )}
+        </Table>
 
-      <ProductModal
-        show={show}
-        setShow={setShow}
-        selectedProduct={selectedProduct}
-      ></ProductModal>
-    </div>
+        <ProductModal
+          show={show}
+          setShow={setShow}
+          selectedProduct={selectedProduct}
+        ></ProductModal>
+      </div>
+    </>
   );
 };
 

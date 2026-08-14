@@ -3,9 +3,8 @@ import Button from 'react-bootstrap/Button';
 import { useState } from 'react';
 import { useAuth } from '../context/AuthProvider';
 import { useNavigate } from 'react-router-dom';
-import { isApiError } from '../src/utils/apiError';
 import ErrorToast from '../components/error-toast/ErrorToast';
-import type { ApiError } from '../src/types';
+import { ApiError } from '../src/errors/ApiError';
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -34,16 +33,11 @@ const LoginPage = () => {
       await loginAuth({ email, password });
       navigate('/', { replace: true });
     } catch (error) {
-      if (isApiError(error)) {
-        /* console.log(error.message);
-        console.log(error.status); */
+      if (error instanceof ApiError) {
         setSubmitError(error);
+        console.log(error);
       } else {
-        /* console.log('error de red'); */
-        setSubmitError({
-          message: 'Connection Error',
-          status: 0,
-        });
+        setSubmitError(new ApiError('error de red', 0));
       }
     }
   }

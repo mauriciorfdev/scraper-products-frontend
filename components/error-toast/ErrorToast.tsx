@@ -1,7 +1,6 @@
 import Toast from 'react-bootstrap/Toast';
 import ToastContainer from 'react-bootstrap/ToastContainer';
-import type { ApiError } from '../../src/types';
-
+import { ApiError } from '../../src/errors/ApiError';
 interface ErrorToastProps {
   error: ApiError;
   onClose: () => void;
@@ -24,6 +23,9 @@ const ErrorToast = ({ error, onClose }: ErrorToastProps) => {
         <Toast.Body>
           {error.status == 0 && 'Please try again in a few minutes'}
           {error.status == 401 && 'Incorrect email or password'}
+          {error.status == 403 && 'You cannot analyze this product.'}
+          {error.status == 503 &&
+            'AI server is temporarily overloaded. Try again'}
           {error.status == 400 && 'Details:'}
           {error.errors && (
             <ul>

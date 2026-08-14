@@ -68,8 +68,3 @@ export interface ApiErrorResponse {
     message: string;
   }[];
 }
-
-//api error on frontend service
-export interface ApiError extends ApiErrorResponse {
-  status: number;
-}
