@@ -11,6 +11,7 @@ import TableLoader from '../table-loader/TableLoader.tsx';
 import ProductModal from '../product-modal/ProductModal.tsx';
 import ErrorToast from '../error-toast/ErrorToast.tsx';
 import { ApiError } from '../../src/errors/ApiError.ts';
+import { analyzeProductService } from '../../services/productService.ts';
 
 const TableHead = () => {
   return (
@@ -226,20 +227,14 @@ const ProductsTable = ({ filters }: ProductsTableProps) => {
   /* productId: string | undefined*/
   async function handleAnalysis(productId: string) {
     setAnalyzingProductId(productId);
-    const url = `${API_URL}/products/${productId}/analysis`;
     try {
-      const resp = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-      });
-      const data = await resp.json();
-      console.log(data);
-      if (!resp.ok) {
-        throw new ApiError(data.message, resp.status, data.errors);
-      }
+      const analyzedProduct = await analyzeProductService(productId);
+      console.log(analyzedProduct);
+      setProductsData((prevProd) =>
+        prevProd.map((p) =>
+          p.id === analyzedProduct.id ? analyzedProduct : p,
+        ),
+      );
     } catch (error) {
       if (error instanceof ApiError) {
         console.log(error);
