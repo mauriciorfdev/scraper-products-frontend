@@ -1,0 +1,92 @@
+.tableContainer {
+  max-width: 768px;
+  margin: 0 auto;
+}
+
+.btnIa {
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 8px;
+  color: #ffffff;
+  cursor: pointer;
+  border: 2px solid transparent;
+  background:
+    linear-gradient(#2b2828, #2b2828) padding-box,
+    /* Color del fondo interno */
+    linear-gradient(45deg, #4285f4, #ea4335, #fbbc05, #34a853) border-box; /* Colores de la IA */
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    filter 0.2s ease;
+}
+
+.btnIa:hover {
+  transform: translateY(-2px); /* Eleva el botón sutilmente */
+  filter: brightness(1.2); /* Satura e ilumina los colores del gradiente */
+  box-shadow: 0 5px 15px rgba(66, 133, 244, 0.3); /* Añade un brillo suave con el color de Google */
+}
+
+/* Efecto Active (cuando se hace clic) */
+.btnIa:active {
+  transform: translateY(0); /* Vuelve a su posición original */
+  filter: brightness(1);
+}
+
+/* Estado deshabilitado para el botón de IA */
+.btnIa:disabled {
+  /* Apaga los colores del gradiente y del fondo */
+  filter: grayscale(1) opacity(0.4);
+
+  /* Elimina la interacción visual */
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+
+  /* Reduce el contraste del texto */
+  color: rgba(255, 255, 255, 0.5);
+
+  /* Evita que el usuario pueda hacer clic o focus */
+  pointer-events: none;
+}
+
+/* Clase para la fila <tr> cuando el proceso sea OK */
+.row-success {
+  animation: glow-pulse 2s infinite alternate;
+}
+
+.row-success td {
+  /* Fondo sutilmente verdoso/azul para denotar éxito */
+  background-color: rgba(52, 168, 83, 0.04) !important;
+
+  /* Bordes superior e inferior verdes para contener la fila */
+  border-top: 2px solid rgba(52, 168, 83, 0.4);
+  border-bottom: 2px solid rgba(52, 168, 83, 0.4);
+
+  /* Transición suave por si la clase se añade dinámicamente */
+  transition: all 0.3s ease;
+}
+
+/* Aplica el efecto de brillo (glow) en las esquinas de la fila */
+.row-success td:first-child {
+  border-left: 1px solid #34a853;
+  /* box-shadow:
+    inset 5px 0 10px rgba(52, 168, 83, 0.15),
+    -5px 0 10px rgba(52, 168, 83, 0.2); */
+}
+
+.row-success td:last-child {
+  border-right: 2px solid #34a853;
+  /* box-shadow:
+    inset -5px 0 10px rgba(52, 168, 83, 0.15),
+    5px 0 10px rgba(52, 168, 83, 0.2); */
+}
+
+/* Animación sutil de pulso, glow vivo pero discreto */
+@keyframes glow-pulse {
+  0% {
+    filter: drop-shadow(0 0 2px rgba(52, 168, 83, 0.2));
+  }
+  100% {
+    filter: drop-shadow(0 0 8px rgba(52, 168, 83, 0.4));
+  }
+}

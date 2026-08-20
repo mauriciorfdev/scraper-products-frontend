@@ -6,7 +6,7 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Stack from 'react-bootstrap/Stack';
 import type { IngredientFilters, Product } from '../../src/types.ts';
-import styles from './ProductsTable.module.css';
+import './ProductsTable.css';
 import TableLoader from '../table-loader/TableLoader.tsx';
 import ProductModal from '../product-modal/ProductModal.tsx';
 import ErrorToast from '../error-toast/ErrorToast.tsx';
@@ -149,16 +149,16 @@ const ActionCell = ({
   analyzingProductId: string | null;
 }) => {
   return (
-    <td>
-      <Button
-        variant='outline-light'
+    <td className='align-middle'>
+      <button
         onClick={() => {
           handleAnalysis(product.id);
         }}
         disabled={analyzingProductId === product.id}
+        className='btnIa'
       >
-        {analyzingProductId === product.id ? 'Analizando...' : 'Analizar'}
-      </Button>
+        {analyzingProductId === product.id ? '✨Analizando...' : '✨Analizar'}
+      </button>
     </td>
   );
 };
@@ -196,6 +196,7 @@ interface ProductsTableProps {
 
 const ProductsTable = ({ filters }: ProductsTableProps) => {
   const [show, setShow] = useState(false);
+  const [productIdSuccess, setProductIdSuccess] = useState<string | null>(null);
   const [selectedProduct, setSelectedProduct] = useState<Product | undefined>();
   const [productsData, setProductsData] = useState<Product[]>([]);
   const noResultsMessage = `We couldn't find any products with that ingredient.`;
@@ -235,6 +236,10 @@ const ProductsTable = ({ filters }: ProductsTableProps) => {
           p.id === analyzedProduct.id ? analyzedProduct : p,
         ),
       );
+      setProductIdSuccess(analyzedProduct.id);
+      setTimeout(() => {
+        setProductIdSuccess(null);
+      }, 3000);
     } catch (error) {
       if (error instanceof ApiError) {
         console.log(error);
@@ -275,7 +280,7 @@ const ProductsTable = ({ filters }: ProductsTableProps) => {
           onClose={() => setAnalysisError(null)}
         />
       )}
-      <div className={styles.container}>
+      <div className={'tableContainer'}>
         <h1>Products ({filteredData.length})</h1>
         <p>{!isLoading && filteredData.length == 0 && noResultsMessage}</p>
 
@@ -287,7 +292,12 @@ const ProductsTable = ({ filters }: ProductsTableProps) => {
             <tbody>
               {filteredData.map((product) => {
                 return (
-                  <tr key={product?.id}>
+                  <tr
+                    className={
+                      productIdSuccess === product.id ? 'row-success' : ''
+                    }
+                    key={product?.id}
+                  >
                     <td>{product.name}</td>
                     <td>{product.brand}</td>
                     <NovaCell product={product} />
