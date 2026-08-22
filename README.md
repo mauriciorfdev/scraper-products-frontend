@@ -1,10 +1,14 @@
-# Scraper Products | Frontend
+# Food Product Analyzer | Frontend
 
 ## About Project
 
-Frontend application for the Scraper Products project. It provides an interface for browsing and filtering supermarket product data. The application uses a dataset previously collected through automated scraping service.
+Frontend application for the AI-powered Food Product Analyzer. It provides an interface for filtering products and triggering ingredient analysis.
 
 Users can filter products by ingredients, a feature that is not currently available on the supermarket website.
+
+Admins can trigger ingredient analysis for products.
+
+_Product data was originally collected through an automated scraping process_.
 
 ## Tech Stack
 
@@ -15,12 +19,14 @@ Users can filter products by ingredients, a feature that is not currently availa
 
 ## Architecture
 
-- **Frontend** — Displays product data and performs client-side ingredient filtering
-- **Backend** — Provides authenticated access to product data through a REST API.
-- **Database** — Stores the product dataset used by the application
+- **Frontend** — Displays product data, handles client-side ingredient filtering, and provides the interface for triggering AI-powered ingredient analysis.
+- **Backend** — Provides authenticated access to product data and handles requests for AI-powered ingredient analysis.
+- **Database** — Stores product data and analysis results.
+- **AI Service** — Analyzes product ingredients and returns structured information such as NOVA classification, allergens, and additives.
 
 ## Features
 
+- AI-powered ingredient analysis
 - Dynamic client-side ingredient filtering
 - Regular expression-based ingredient matching
 - Ingredient inclusion/exclusion toggle
@@ -36,3 +42,7 @@ Users can filter products by ingredients, a feature that is not currently availa
 ## Future Improvements
 
 - Reintroduce automated product scraping using a more robust data collection strategy.
+
+## Related Repository
+
+[Food Product Analyzer | Backend](https://github.com/mauriciorfdev/scraper-products-backend)
