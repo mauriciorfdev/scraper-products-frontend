@@ -5,7 +5,7 @@ import type { ReactNode } from 'react';
 const ThemeContext = createContext<ThemeMode>('dark');
 
 const ThemeProvider = ({ children }: { children: ReactNode }) => {
-  const [theme, setTheme] = useState<ThemeMode>('dark');
+  const [theme] = useState<ThemeMode>('dark');
 
   useEffect(() => {
     document.body.setAttribute('data-bs-theme', theme);
