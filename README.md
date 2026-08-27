@@ -10,6 +10,18 @@ Admins can trigger ingredient analysis for products.
 
 _Product data was originally collected through an automated scraping process_.
 
+## Demo
+
+### AI Ingredient Analysis
+
+![AI analysis demo](/src/assets/demo/ai-analysis-demo.gif)
+
+### Ingredient Filtering
+
+![Ingredient filtering demo](/src/assets/demo/filtering-demo.gif)
+
+### 🔗 [See the project deployed on Vercel](https://scraper-products-frontend-zeta.vercel.app/)
+
 ## Tech Stack
 
 ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
